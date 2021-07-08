@@ -157,8 +157,9 @@ public final class SqlSessionUtils {
 
       if (environment.getTransactionFactory() instanceof SpringManagedTransactionFactory) {
         LOGGER.debug(() -> "Registering transaction synchronization for SqlSession [" + session + "]");
-
+        //创建holder
         holder = new SqlSessionHolder(session, executorType, exceptionTranslator);
+        //将holder 绑定到当前线程中
         TransactionSynchronizationManager.bindResource(sessionFactory, holder);
         TransactionSynchronizationManager
             .registerSynchronization(new SqlSessionSynchronization(holder, sessionFactory));

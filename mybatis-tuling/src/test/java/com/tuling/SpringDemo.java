@@ -2,6 +2,7 @@ package com.tuling;
 
 
 import com.tuling.spring.mapper.UserMapper;
+import com.tuling.spring.model.User;
 import com.tuling.spring.service.UserService;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
@@ -24,8 +25,8 @@ public class SpringDemo {
         //  应用生命周期是一样的
         //  跨线程 用的
         UserMapper userMapper = context.getBean(UserMapper.class);
-        System.out.println(userMapper.selectByid(1));
-
+        User user = userMapper.selectByid2(1);
+        System.out.println("user = " + user);
 //        SqlSession sqlSession = null;
 //        UserMapper userMapper2 = sqlSession.getMapper(UserMapper.class);
     }
@@ -40,16 +41,16 @@ public class SpringDemo {
     }
 
 
-    @Test
-    public void test3() {
-        ClassPathXmlApplicationContext context
-                = new ClassPathXmlApplicationContext("spring.xml");
-        //  单例 还是多例?
-        //  应用生命周期是一样的
-        //  跨线程 用的
-        UserMapper userMapper = context.getBean(UserMapper.class);
-        System.out.println(userMapper.selectIds(Arrays.asList(1, 2, 3)));
-
-    }
+//    @Test
+//    public void test3() {
+//        ClassPathXmlApplicationContext context
+//                = new ClassPathXmlApplicationContext("spring.xml");
+//        //  单例 还是多例?
+//        //  应用生命周期是一样的
+//        //  跨线程 用的
+//        UserMapper userMapper = context.getBean(UserMapper.class);
+//        System.out.println(userMapper.selectIds(Arrays.asList(1, 2, 3)));
+//
+//    }
 
 }

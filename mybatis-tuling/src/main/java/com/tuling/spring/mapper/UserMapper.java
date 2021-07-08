@@ -2,10 +2,7 @@ package com.tuling.spring.mapper;
 
 import com.tuling.spring.model.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
 @Mapper
 public interface UserMapper {
 
@@ -18,6 +15,6 @@ public interface UserMapper {
 
     int insertUser(User user);
 
-    List<User> selectIds(@Param("ids") List<Integer> ids);
+//    List<User> selectIds(@Param("ids") List<Integer> ids);
 
 }

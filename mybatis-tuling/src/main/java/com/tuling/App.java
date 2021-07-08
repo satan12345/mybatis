@@ -49,8 +49,8 @@ public class App {
 //            SqlSession session1 = sqlSessionFactory.openSession();
             try {
                 // 执行查询 底层执行jdbc
-                User user = session.selectOne("com.tuling.mapper.UserMapper.selectById", 1);
-                System.out.println("user = " + user);
+//                User user = session.selectOne("com.tuling.mapper.UserMapper.selectById", 1);
+//                System.out.println("user = " + user);
 
                 //获得代理对象
                 UserMapper mapper = session.getMapper(UserMapper.class);

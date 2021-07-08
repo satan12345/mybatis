@@ -72,9 +72,13 @@ import org.springframework.dao.support.PersistenceExceptionTranslator;
  * @see MyBatisExceptionTranslator
  */
 public class SqlSessionTemplate implements SqlSession, DisposableBean {
-
+  /**
+   * session工厂
+   */
   private final SqlSessionFactory sqlSessionFactory;
-
+  /**
+   * 执行器类型
+   */
   private final ExecutorType executorType;
 
   private final SqlSession sqlSessionProxy;
@@ -92,8 +96,11 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
    */
   public SqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
     /**
-     * sqlSessionFactory工厂对象 sqlSessionFactory.getConfiguration().getDefaultExecutorType() sql的默认执行器对象 public enum
-     * ExecutorType { SIMPLE, REUSE, BATCH }
+     * sqlSessionFactory工厂对象
+     * sqlSessionFactory.getConfiguration().getDefaultExecutorType()
+     * sql的默认执行器对象
+     * public enum ExecutorType { SIMPLE, REUSE, BATCH }
+     *
      */
     this(sqlSessionFactory, sqlSessionFactory.getConfiguration().getDefaultExecutorType());
   }

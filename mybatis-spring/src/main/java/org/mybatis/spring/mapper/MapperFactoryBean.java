@@ -19,6 +19,7 @@ import static org.springframework.util.Assert.notNull;
 
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.FactoryBean;
@@ -140,9 +141,11 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
   @Override
   public T getObject() throws Exception {
     /**
-     * 第一步:就是获取我么女的SqlSessionTemplate 第二步:获取我们的SqlSessionTemplate.getMapper(mapperInterface)方法
+     * 第一步:就是获取我门的SqlSessionTemplate
+     * 第二步:获取我们的SqlSessionTemplate.getMapper(mapperInterface)方法
      */
-    return getSqlSession().getMapper(this.mapperInterface);
+    final SqlSession sqlSession = getSqlSession();
+    return sqlSession.getMapper(this.mapperInterface);
   }
 
   /**
