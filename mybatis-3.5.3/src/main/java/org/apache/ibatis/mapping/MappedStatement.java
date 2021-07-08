@@ -35,7 +35,7 @@ public final class MappedStatement {
 
   private String resource;//mapper配置文件名，如：UserMapper.xml
   private Configuration configuration;//全局配置
-  private String id;//节点的id属性加命名空间,如：com.lucky.mybatis.dao.UserMapper.selectByExample
+  private String id;//节点的id属性加命名空间,如：com.lucky.mybatis.mapper.UserMapper.selectByExample
   private Integer fetchSize;
   private Integer timeout;//超时时间
   private StatementType statementType;//操作SQL的对象的类型
