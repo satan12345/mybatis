@@ -153,6 +153,10 @@ public class TypeAliasRegistry {
   }
 
   public void registerAlias(Class<?> type) {
+    /**
+     *class com.tuling.entity.User -->User
+     * 获取简单类名 在获取是否有Alias注解 进行注册
+     */
     String alias = type.getSimpleName();
     Alias aliasAnnotation = type.getAnnotation(Alias.class);
     if (aliasAnnotation != null) {

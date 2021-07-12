@@ -87,7 +87,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
     if (currentNamespace == null) {
       throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
     }
-
+    /**
+     * 命名空间已存在 并且与传入的命名空间不相同 则抛出异常
+     */
     if (this.currentNamespace != null && !this.currentNamespace.equals(currentNamespace)) {
       throw new BuilderException("Wrong namespace. Expected '"
           + this.currentNamespace + "' but found '" + currentNamespace + "'.");
@@ -284,7 +286,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       throw new IncompleteElementException("Cache-ref not yet resolved");
     }
 
-    /**
+    /**id : 初始为 selectByid2
+     * id :最终为 com.tuling.spring.mapper.UserMapper.selectByid2
      * 为我们的sqlId 拼接上命名空间
      */
     id = applyCurrentNamespace(id, false);

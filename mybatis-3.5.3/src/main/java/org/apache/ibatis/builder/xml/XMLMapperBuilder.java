@@ -107,7 +107,7 @@ public class XMLMapperBuilder extends BaseBuilder {
        */
       configurationElement(parser.evalNode("/mapper"));
       /**
-       * 把资源保存到我们Configuration中
+       * 把资源保存到我们Configuration中 作为已经加载过的资源
        */
       configuration.addLoadedResource(resource);
 

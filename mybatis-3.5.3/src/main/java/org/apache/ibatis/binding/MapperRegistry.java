@@ -110,7 +110,8 @@ public class MapperRegistry {
         knownMappers.put(type, new MapperProxyFactory<>(type));
         // It's important that the type is added before the parser is run
         // otherwise the binding may automatically be attempted by the
-        // mapper parser. If the type is already known, it won't try.    mapper注解构造器
+        // mapper parser. If the type is already known, it won't try.
+        // mapper注解构造器
         MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
         /**
          * 进行解析
@@ -119,6 +120,7 @@ public class MapperRegistry {
         loadCompleted = true;
       } finally {
         if (!loadCompleted) {
+          //没有解析成功 则移除
           knownMappers.remove(type);
         }
       }

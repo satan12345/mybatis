@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public User getUser2(Integer id) {
         userMapper.selectByid(id);
         return userMapper.selectByid(id);

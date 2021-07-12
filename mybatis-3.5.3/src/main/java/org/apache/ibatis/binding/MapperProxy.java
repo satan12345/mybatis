@@ -123,7 +123,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     /**
      * 相当于这句代码.jdk8的新写法
      * if(methodCache.get(method)==null){
-     *     methodCache.put(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()))
+     *     methodCache.put(method,new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()))
      * }
      */
     return methodCache.computeIfAbsent(method, k -> new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));

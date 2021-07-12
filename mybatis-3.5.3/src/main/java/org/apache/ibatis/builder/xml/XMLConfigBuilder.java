@@ -79,8 +79,9 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 创建一个用于解析xml配置的构建器对象
-   * @param inputStream 传入进来的xml的配置
-   * @param environment 我们的环境变量
+   *
+   * @param inputStream              传入进来的xml的配置
+   * @param environment              我们的环境变量
    * @param props:用于保存我们从xml中解析出来的属性
    */
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
@@ -137,8 +138,9 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 方法实现说明:解析我们mybatis-config.xml的 configuration节点
-   * @author:xsls
+   *
    * @param root:configuration节点对象
+   * @author:xsls
    * @return:
    * @exception:
    * @date:2019/8/30 15:57
@@ -252,8 +254,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       /**
        * 解析我们的类型处理器节点
        * <typeHandlers>
-       <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
-       </typeHandlers>
+            <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
+         </typeHandlers>
        解析到：org.apache.ibatis.session.Configuration#typeHandlerRegistry.typeHandlerMap
        */
       typeHandlerElement(root.evalNode("typeHandlers"));
@@ -319,14 +321,15 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   /**
-   *   <typeAliases>
-   *         <package name="com.tuling.entity" />
+   * <typeAliases>
+   * <package name="com.tuling.entity" />
    *
-   *     </typeAliases>
-   *       <typeAliases>
-   *    *
-   *    *         <typeAlias type="" alias=""/>
-   *    *     </typeAliases>
+   * </typeAliases>
+   * <typeAliases>
+   * *
+   * *         <typeAlias type="" alias=""/>
+   * *     </typeAliases>
+   *
    * @param parent
    */
   private void typeAliasesElement(XNode parent) {
@@ -356,10 +359,11 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   /**
-   *  <plugins>
-   *         <plugin interceptor="com.tuling.plugins.ExamplePlugin" ></plugin>
-   *     </plugins>
-   *     解析插件
+   * <plugins>
+   * <plugin interceptor="com.tuling.plugins.ExamplePlugin" ></plugin>
+   * </plugins>
+   * 解析插件
+   *
    * @param parent
    * @throws Exception
    */
@@ -407,12 +411,18 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 解析 properties节点
+   *  会先加载property 然后在加载db.properties
+   *  后面加载的会覆盖之前加载的
+   * <properties resource="db.properties">
+   *   <property name="" value=""/>
+   * </properties>
+   *
    * @param context
    * @throws Exception
    */
   private void propertiesElement(XNode context) throws Exception {
     if (context != null) {
-      //获得子节点
+      //先将子节点加载为Properties
       Properties defaults = context.getChildrenAsProperties();
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
@@ -421,9 +431,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
       if (resource != null) {
         /**
-         * 将配置文件中的资源加载为Pr
+         * 再将配置文件中的资源加载为Properties
          */
-         Properties resourceAsProperties = Resources.getResourceAsProperties(resource);
+        Properties resourceAsProperties = Resources.getResourceAsProperties(resource);
         defaults.putAll(resourceAsProperties);
       } else if (url != null) {
         defaults.putAll(Resources.getUrlAsProperties(url));
@@ -467,27 +477,28 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   /**
-   *  <environments default="development">
-   *         <environment id="development">
-   *             <transactionManager type="JDBC">
+   * <environments default="development">
+   * <environment id="development">
+   * <transactionManager type="JDBC">
    *
-   *             </transactionManager>
-   *            mybatis内置了JNDI、POOLED、UNPOOLED三种类型的数据源,其中POOLED对应的实现为org.apache.ibatis.datasource.pooled.PooledDataSource,它是mybatis自带实现的一个同步、线程安全的数据库连接池 一般在生产中,我们会使用c3p0或者druid连接池
-   *             <dataSource type="POOLED">
-   *                 <property name="driver" value="${mysql.driverClass}"/>
-   *                 <property name="url" value="${mysql.jdbcUrl}"/>
-   *                 <property name="username" value="${mysql.user}"/>
-   *                 <property name="password" value="${mysql.password}"/>
-   *             </dataSource>
-   *         </environment>
-   *     </environments>
+   * </transactionManager>
+   * mybatis内置了JNDI、POOLED、UNPOOLED三种类型的数据源,其中POOLED对应的实现为org.apache.ibatis.datasource.pooled.PooledDataSource,它是mybatis自带实现的一个同步、线程安全的数据库连接池 一般在生产中,我们会使用c3p0或者druid连接池
+   * <dataSource type="POOLED">
+   * <property name="driver" value="${mysql.driverClass}"/>
+   * <property name="url" value="${mysql.jdbcUrl}"/>
+   * <property name="username" value="${mysql.user}"/>
+   * <property name="password" value="${mysql.password}"/>
+   * </dataSource>
+   * </environment>
+   * </environments>
+   *
    * @param context
    * @throws Exception
    */
   private void environmentsElement(XNode context) throws Exception {
     if (context != null) {
       if (environment == null) {
-        //获取环境参数 development
+        //获取环境参数 获取默认值 development
         environment = context.getStringAttribute("default");
       }
       for (XNode child : context.getChildren()) {
@@ -496,13 +507,15 @@ public class XMLConfigBuilder extends BaseBuilder {
           //匹配指定的
           //解析事务管理器参数
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
-          //解析dataSource参数
+          //解析dataSource参数构建数据源工厂
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           //获取数据源
           DataSource dataSource = dsFactory.getDataSource();
           //构建环境参数
           Environment.Builder environmentBuilder = new Environment.Builder(id)
+            //事务工厂
             .transactionFactory(txFactory)
+            //数据源
             .dataSource(dataSource);
 
           configuration.setEnvironment(environmentBuilder.build());
@@ -531,22 +544,23 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   /**
-   *  <environments default="development">
-   *         <environment id="development">
-   *             <transactionManager type="JDBC">
+   * <environments default="development">
+   * <environment id="development">
+   * <transactionManager type="JDBC">
    *
-   *             </transactionManager>
-   *              mybatis内置了JNDI、POOLED、UNPOOLED三种类型的数据源,
-   *              其中POOLED对应的实现为org.apache.ibatis.datasource.pooled.PooledDataSource,
-   *              它是mybatis自带实现的一个同步、线程安全的数据库连接池 一般在生产中,我们会使用c3p0或者druid连接池
-   *             <dataSource type="POOLED">
-   *                 <property name="driver" value="${mysql.driverClass}"/>
-   *                 <property name="url" value="${mysql.jdbcUrl}"/>
-   *                 <property name="username" value="${mysql.user}"/>
-   *                 <property name="password" value="${mysql.password}"/>
-   *             </dataSource>
-   *         </environment>
-   *     </environments>
+   * </transactionManager>
+   * mybatis内置了JNDI、POOLED、UNPOOLED三种类型的数据源,
+   * 其中POOLED对应的实现为org.apache.ibatis.datasource.pooled.PooledDataSource,
+   * 它是mybatis自带实现的一个同步、线程安全的数据库连接池 一般在生产中,我们会使用c3p0或者druid连接池
+   * <dataSource type="POOLED">
+   * <property name="driver" value="${mysql.driverClass}"/>
+   * <property name="url" value="${mysql.jdbcUrl}"/>
+   * <property name="username" value="${mysql.user}"/>
+   * <property name="password" value="${mysql.password}"/>
+   * </dataSource>
+   * </environment>
+   * </environments>
+   *
    * @param context
    * @return
    * @throws Exception
@@ -566,20 +580,21 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   /**
-   *  <environments default="development">
-   *         <environment id="development">
-   *             <transactionManager type="JDBC">
+   * <environments default="development">
+   * <environment id="development">
+   * <transactionManager type="JDBC">
    *
-   *             </transactionManager>
-   *               mybatis内置了JNDI、POOLED、UNPOOLED三种类型的数据源,其中POOLED对应的实现为org.apache.ibatis.datasource.pooled.PooledDataSource,它是mybatis自带实现的一个同步、线程安全的数据库连接池 一般在生产中,我们会使用c3p0或者druid连接池
-   *             <dataSource type="POOLED">
-   *                 <property name="driver" value="${mysql.driverClass}"/>
-   *                 <property name="url" value="${mysql.jdbcUrl}"/>
-   *                 <property name="username" value="${mysql.user}"/>
-   *                 <property name="password" value="${mysql.password}"/>
-   *             </dataSource>
-   *         </environment>
-   *     </environments>
+   * </transactionManager>
+   * mybatis内置了JNDI、POOLED、UNPOOLED三种类型的数据源,其中POOLED对应的实现为org.apache.ibatis.datasource.pooled.PooledDataSource,它是mybatis自带实现的一个同步、线程安全的数据库连接池 一般在生产中,我们会使用c3p0或者druid连接池
+   * <dataSource type="POOLED">
+   * <property name="driver" value="${mysql.driverClass}"/>
+   * <property name="url" value="${mysql.jdbcUrl}"/>
+   * <property name="username" value="${mysql.user}"/>
+   * <property name="password" value="${mysql.password}"/>
+   * </dataSource>
+   * </environment>
+   * </environments>
+   *
    * @param context
    * @return
    * @throws Exception
@@ -600,7 +615,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * <typeHandlers>
-   *    <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
+   * <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
    * </typeHandlers>
    * 设置类型处理器
    */
@@ -633,8 +648,9 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 方法实现说明
-   * @author:xsls
+   *
    * @param parent:mappers
+   * @author:xsls
    * @return:
    * @exception:
    * @date:2019/8/30 16:32
@@ -645,11 +661,12 @@ public class XMLConfigBuilder extends BaseBuilder {
        * 获取我们mappers节点下的一个一个的mapper节点
        */
       for (XNode child : parent.getChildren()) {
-        /**
-         * 判断我们mapper是不是通过批量注册的
-         * <package name="com.tuling.mapper"></package>
-         */
+
         if ("package".equals(child.getName())) {
+          /**
+           * 判断我们mapper是不是通过批量注册的
+           * <package name="com.tuling.mapper"></package>
+           */
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {

@@ -111,6 +111,9 @@ public class Configuration {
   protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
+  /**
+   * 控制一级缓存是否开启 默认开启
+   */
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
@@ -168,7 +171,7 @@ public class Configuration {
       .conflictMessageProducer((savedValue, targetValue) ->
           ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
   /**
-   * 二级缓存map
+   * 二级缓存map 每个mapper的命名空间作为key Cache作为value
    */
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   /**
@@ -179,6 +182,8 @@ public class Configuration {
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
   /**
    * 保存已经加载的mapper.xml 比如 com/tuling/mapper/UserMapper.xml
+   * 接口则会这样保存 interface com.tuling.mapper.UserMapper
+   * 因此一个接口通过会保存2个
    */
   protected final Set<String> loadedResources = new HashSet<>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");

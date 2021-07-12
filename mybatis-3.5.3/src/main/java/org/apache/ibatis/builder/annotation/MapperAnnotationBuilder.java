@@ -99,9 +99,14 @@ public class MapperAnnotationBuilder {
 
   private static final Set<Class<? extends Annotation>> SQL_ANNOTATION_TYPES = new HashSet<>();
   private static final Set<Class<? extends Annotation>> SQL_PROVIDER_ANNOTATION_TYPES = new HashSet<>();
-
+  /**
+   * 全局配置类
+   */
   private final Configuration configuration;
   private final MapperBuilderAssistant assistant;
+  /**
+   * 接口类型
+   */
   private final Class<?> type;
 
   static {
@@ -125,7 +130,7 @@ public class MapperAnnotationBuilder {
 
   public void parse() {
     String resource = type.toString();
-    // 是否已经解析mapper接口对应的xml
+    // 是否已经解析mapper接口对应的mapper  interface com.tuling.mapper.ZhonghengMapper
     if (!configuration.isResourceLoaded(resource)) {
       // 根据mapper接口名获取 xml文件并解析，  解析<mapper></mapper>里面所有东西放到configuration
       loadXmlResource();
@@ -171,6 +176,7 @@ public class MapperAnnotationBuilder {
     // to prevent loading again a resource twice
     // this flag is set at XMLMapperBuilder#bindMapperForNamespace
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
+      //com.tuling.mapper.UserMapper 转成 com/tuling/mapper/UserMapper.xml
       String xmlResource = type.getName().replace('.', '/') + ".xml";
       // #1347
       InputStream inputStream = type.getResourceAsStream("/" + xmlResource);

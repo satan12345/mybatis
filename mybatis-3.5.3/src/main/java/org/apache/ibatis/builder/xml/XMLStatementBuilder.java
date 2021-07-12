@@ -95,12 +95,12 @@ public class XMLStatementBuilder extends BaseBuilder {
      */
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
     /**
-     *  获取flushCache属性
+     *  获取flushCache属性 刷新缓存
      *  默认值为isSelect的反值：查询：默认flushCache=false   增删改：默认flushCache=true
      */
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     /**
-     * 获取useCache属性
+     * 获取useCache属性 使用缓存
      * 默认值为isSelect：查询：默认useCache=true   增删改：默认useCache=false
      */
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
