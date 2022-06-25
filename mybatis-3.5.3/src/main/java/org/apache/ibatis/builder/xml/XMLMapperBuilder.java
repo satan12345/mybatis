@@ -219,7 +219,8 @@ public class XMLMapperBuilder extends BaseBuilder {
       /**
        * 创建一个xmlStatement的构建器对象
        */
-      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
+      final XMLStatementBuilder statementParser =
+        new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
       try {
         statementParser.parseStatementNode();
       } catch (IncompleteElementException e) {

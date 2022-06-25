@@ -42,12 +42,21 @@ public class Plugin implements InvocationHandler {
 
   public static Object wrap(Object target, Interceptor interceptor) {
     // 获得interceptor配置的@Signature的type
+    /**
+     * @Intercepts(
+     *     {@Signature(type = Executor.class,
+     *         method = "query",
+     *         args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}
+     *     )}
+     * )
+     */
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
     // 当前代理类型
     Class<?> type = target.getClass();
     // 根据当前代理类型 和 @signature指定的type进行配对， 配对成功则可以代理
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
     if (interfaces.length > 0) {
+      //创建动态代理
       return Proxy.newProxyInstance(
           type.getClassLoader(),
           interfaces,
@@ -61,6 +70,7 @@ public class Plugin implements InvocationHandler {
     try {
       Set<Method> methods = signatureMap.get(method.getDeclaringClass());
       if (methods != null && methods.contains(method)) {
+        //拦截的方法是插件要拦截的方法
         return interceptor.intercept(new Invocation(target, method, args));
       }
       return method.invoke(target, args);

@@ -112,7 +112,7 @@ public class Configuration {
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   /**
-   * 控制一级缓存是否开启 默认开启
+   * 控制二级缓存是否开启 默认开启
    */
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls;
@@ -655,7 +655,9 @@ public class Configuration {
    * @return
    */
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+    //生成statementHandler
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
+    //为 StatementHandler创建动态代码
     statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
     return statementHandler;
   }
@@ -697,6 +699,11 @@ public class Configuration {
     }
     /**
      * TODO:调用所有的拦截器对象plugin方法
+     * 根据插件创建动态代理
+     * Executor
+     * ParameterHandler
+     * ResultSetHandler
+     * StatementHandler
      */
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;

@@ -38,10 +38,10 @@ public final class MappedStatement {
   private String id;//节点的id属性加命名空间,如：com.lucky.mybatis.mapper.UserMapper.selectByExample
   private Integer fetchSize;
   private Integer timeout;//超时时间
-  private StatementType statementType;//操作SQL的对象的类型
+  private StatementType statementType;//操作SQL的对象的类型 默认  StatementType.PREPARED;
   private ResultSetType resultSetType;//结果类型
   private SqlSource sqlSource;//sql语句
-  private Cache cache;//缓存
+  private Cache cache;//缓存 这里指向mapper的二级缓存
   private ParameterMap parameterMap;
   private List<ResultMap> resultMaps;
   private boolean flushCacheRequired;
@@ -294,7 +294,9 @@ public final class MappedStatement {
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
+
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
+
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.isEmpty()) {
       boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);

@@ -19,10 +19,15 @@ import java.util.Properties;
  * @Author 徐庶   QQ:1092002729
  * @Slogan 致敬大师，致敬未来的你
  */
-@Intercepts({@Signature(type = Executor.class, method = "query", args = {
-        MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class
-})})
-//@Intercepts({@Signature( type= StatementHandler.class,  method = "update", args ={Statement.class})})
+@Intercepts(
+    {@Signature(type = Executor.class,
+        method = "query",
+        args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}
+    )}
+)
+//@Intercepts({@Signature(
+// type= StatementHandler.class,  method = "update",
+// args ={Statement.class})})
 public class ExamplePlugin implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         System.out.println("代理");

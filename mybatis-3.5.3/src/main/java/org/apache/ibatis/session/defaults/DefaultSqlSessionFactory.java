@@ -49,8 +49,10 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   public SqlSession openSession() {
     //获取执行器
     ExecutorType defaultExecutorType = configuration.getDefaultExecutorType();
-
-    return openSessionFromDataSource(defaultExecutorType, null, false);
+  //从数据源中获取session
+    return openSessionFromDataSource(defaultExecutorType,
+      null,
+      false);
   }
 
   @Override
@@ -118,11 +120,11 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     Transaction tx = null;
     try {
       /**
-       * 获取环境变量
+       * 获取环境变量 包含事务工厂与数据源信息
        */
       final Environment environment = configuration.getEnvironment();
       /**
-       * 获取事务工厂
+       * 从环境变量中获取获取事务工厂
        */
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
 
@@ -131,10 +133,11 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
        * 创建一个sql执行器对象
        * 一般情况下 若我们的mybaits的全局配置文件的cacheEnabled默认为ture就返回
        * 一个cacheExecutor,若关闭的话返回的就是一个SimpleExecutor
+       * 如果有拦截器的话 则会返回executor的代理类
        */
       final Executor executor = configuration.newExecutor(tx, execType);
       /**
-       * 创建返回一个DeaultSqlSession对象返回
+       * 创建返回一个DefaultSqlSession对象返回
        */
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {

@@ -137,8 +137,9 @@ public class MapperAnnotationBuilder {
       loadXmlResource();
       // 添加已解析的标记
       configuration.addLoadedResource(resource);
-
+      //设置接口的全类名作为命名空间
       assistant.setCurrentNamespace(type.getName());
+      //解析二级缓存
       parseCache();
       parseCacheRef();
       // 获取所有方法 看是不是用了注解

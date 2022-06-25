@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuling.spring.mapper.UserMapper">
-
-    <select id="selectByid2" resultType="com.tuling.spring.model.User">
+<!--  <cache readOnly="false"></cache>-->
+    <select id="selectByid2"  resultType="com.tuling.spring.model.User">
        select * from user where id=#{id}
    </select>
     <update id="updateByid2" parameterType="com.tuling.spring.model.User">

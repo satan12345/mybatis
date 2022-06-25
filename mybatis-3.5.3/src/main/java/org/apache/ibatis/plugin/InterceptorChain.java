@@ -25,11 +25,13 @@ import java.util.List;
 public class InterceptorChain {
   /**
    * 拦截器集合
+   *也就是插件集合
    */
   private final List<Interceptor> interceptors = new ArrayList<>();
 
   public Object pluginAll(Object target) {
     for (Interceptor interceptor : interceptors) {
+      //遍历插件
       target = interceptor.plugin(target);
     }
     return target;

@@ -320,6 +320,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .resultSetType(resultSetType)
         .flushCacheRequired(valueOrDefault(flushCache, !isSelect))
         .useCache(valueOrDefault(useCache, isSelect))
+        //MappedStatement 使用的是二级缓存
         .cache(currentCache);
 
     /**

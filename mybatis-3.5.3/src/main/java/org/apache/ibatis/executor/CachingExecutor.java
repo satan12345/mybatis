@@ -38,6 +38,7 @@ import org.apache.ibatis.transaction.Transaction;
  */
 public class CachingExecutor implements Executor {
 
+  //代理执行器
   private final Executor delegate;
   private final TransactionalCacheManager tcm = new TransactionalCacheManager();
 
@@ -93,7 +94,9 @@ public class CachingExecutor implements Executor {
      * 将参数传入 获取真正的sql
      */
     BoundSql boundSql = ms.getBoundSql(parameterObject);
+    //生成缓存key
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
+    //查询
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
