@@ -39,6 +39,7 @@ public class App {
         try {
             String resource = "mybatis-config.xml";
             InputStream resourceAsStream = Resources.getResourceAsStream(resource);
+            //工厂模式
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
             // 数据源 执行器  DefaultSqlSession
             SqlSession session = sqlSessionFactory.openSession();

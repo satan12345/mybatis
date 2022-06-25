@@ -1,5 +1,5 @@
 /**
- * Copyright ${license.git.copyrightYears} the original author or authors.
+ * Copyright 2010-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public final class SqlSessionUtils {
    */
   /**
    * 方法实现说明:获取我们的session对象
-   * 
+   *
    * @author:xsls
    * @param sessionFactory:session工厂对象
    * @param executorType:执行器类型
@@ -152,14 +152,15 @@ public final class SqlSessionUtils {
   private static void registerSessionHolder(SqlSessionFactory sessionFactory, ExecutorType executorType,
       PersistenceExceptionTranslator exceptionTranslator, SqlSession session) {
     SqlSessionHolder holder;
+    //是否开启Spring的事务
     if (TransactionSynchronizationManager.isSynchronizationActive()) {
       Environment environment = sessionFactory.getConfiguration().getEnvironment();
 
       if (environment.getTransactionFactory() instanceof SpringManagedTransactionFactory) {
         LOGGER.debug(() -> "Registering transaction synchronization for SqlSession [" + session + "]");
-        //创建holder
+        // 创建holder
         holder = new SqlSessionHolder(session, executorType, exceptionTranslator);
-        //将holder 绑定到当前线程中
+        // 将holder 绑定到当前线程中
         TransactionSynchronizationManager.bindResource(sessionFactory, holder);
         TransactionSynchronizationManager
             .registerSynchronization(new SqlSessionSynchronization(holder, sessionFactory));
@@ -183,7 +184,7 @@ public final class SqlSessionUtils {
 
   /**
    * 方法实现说明
-   * 
+   *
    * @author:xsls
    * @param executorType:执行器类型
    * @return:

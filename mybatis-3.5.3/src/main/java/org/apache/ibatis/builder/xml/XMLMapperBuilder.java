@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,6 +56,9 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private final XPathParser parser;
   private final MapperBuilderAssistant builderAssistant;
+  /**
+   * 用于存储解析到的sql片段
+   */
   private final Map<String, XNode> sqlFragments;
   private final String resource;
 
@@ -479,7 +482,9 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void sqlElement(List<XNode> list, String requiredDatabaseId) {
     for (XNode context : list) {
       String databaseId = context.getStringAttribute("databaseId");
+      //获取sql的片段id
       String id = context.getStringAttribute("id");
+      //增加命名空间
       id = builderAssistant.applyCurrentNamespace(id, false);
       if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) {
         sqlFragments.put(id, context);

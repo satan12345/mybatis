@@ -1,5 +1,5 @@
 /**
- * Copyright ${license.git.copyrightYears} the original author or authors.
+ * Copyright 2010-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +62,9 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements FactoryBean<T> {
 
+  /**
+   * 要代理的接口
+   */
   private Class<T> mapperInterface;
 
   private boolean addToConfig = true;
@@ -145,7 +148,8 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
      * 第二步:获取我们的SqlSessionTemplate.getMapper(mapperInterface)方法
      */
     final SqlSession sqlSession = getSqlSession();
-    return sqlSession.getMapper(this.mapperInterface);
+    T mapper = sqlSession.getMapper(this.mapperInterface);
+    return mapper;
   }
 
   /**

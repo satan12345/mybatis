@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,6 +70,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
    * 当前的二级缓存引用
    */
   private Cache currentCache;
+
   private boolean unresolvedCacheRef; // issue #676
 
   public MapperBuilderAssistant(Configuration configuration, String resource) {
@@ -144,12 +145,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean readWrite,
       boolean blocking,
       Properties props) {
+    //用构造器模式创建缓存对象
       //命名空间作为id
       Cache cache = new CacheBuilder(currentNamespace)
-        //默认的缓存实现类
+        //设置缓存的实现类
         .implementation(valueOrDefault(typeClass, PerpetualCache.class))
         //内存溢出的缓存实现类
         .addDecorator(valueOrDefault(evictionClass, LruCache.class))
+        //刷新时间间隔
         .clearInterval(flushInterval)
         .size(size)
         .readWrite(readWrite)
@@ -289,6 +292,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     /**id : 初始为 selectByid2
      * id :最终为 com.tuling.spring.mapper.UserMapper.selectByid2
      * 为我们的sqlId 拼接上命名空间
+     * 这个id后面用于map的key
      */
     id = applyCurrentNamespace(id, false);
     /**
@@ -299,7 +303,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
     /**
      * 通过MapperStatment的构建器构建对象
      */
-    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)
+    MappedStatement.Builder statementBuilder =
+      new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)
         .resource(resource)
         .fetchSize(fetchSize)
         .timeout(timeout)
@@ -326,7 +331,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
 
     /**
-     * 构建我们的的MappedStatment对象
+     * 构建我们的的MappedStatement对象
      */
     MappedStatement statement = statementBuilder.build();
     /**

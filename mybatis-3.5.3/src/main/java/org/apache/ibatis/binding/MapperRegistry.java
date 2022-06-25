@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,6 +34,9 @@ import org.apache.ibatis.session.SqlSession;
 public class MapperRegistry {
 
   private final Configuration config;
+  /**
+   * 保存 mapper的map
+   */
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
   public MapperRegistry(Configuration config) {
@@ -114,7 +117,7 @@ public class MapperRegistry {
         // mapper注解构造器
         MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
         /**
-         * 进行解析
+         * 进行解析  解析mapper
          */
         parser.parse();
         loadCompleted = true;

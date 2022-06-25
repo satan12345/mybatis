@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -90,17 +90,20 @@ public class CacheBuilder {
   }
 
   public Cache build() {
+    //设置默认的缓存实现类
     setDefaultImplementations();
-    //实例化缓存实现类
+    //实例化缓存实现类 PerpetualCache
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
     // issue #352, do not apply decorators to custom caches
     //判断当前的缓存是否是PerpetualCache
     if (PerpetualCache.class.equals(cache.getClass())) {
       for (Class<? extends Cache> decorator : decorators) {
+        //装饰器
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
       }
+      //装饰器模式
       cache = setStandardDecorators(cache);
     }
     else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {

@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String nodeName = context.getNode().getNodeName();
     /**
      * 根据nodeName 获得 SqlCommandType枚举
+     * UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH;
      */
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
     /**
@@ -97,6 +98,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     /**
      *  获取flushCache属性 刷新缓存
      *  默认值为isSelect的反值：查询：默认flushCache=false   增删改：默认flushCache=true
+     *  如果当前sql是查询语句:isSelect值为true flushCache的值就为false 不刷新缓存
      */
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     /**
@@ -187,7 +189,8 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     /**
      * 通过class org.apache.ibatis.scripting.xmltags.XMLLanguageDriver来解析我们的
-     * sql脚本对象  .  解析SqlNode. 注意， 只是解析成一个个的SqlNode， 并不会完全解析sql,因为这个时候参数都没确定，动态sql无法解析
+     * sql脚本对象  .  解析SqlNode. 注意， 只是解析成一个个的SqlNode，
+     * 并不会完全解析sql,因为这个时候参数都没确定，动态sql无法解析
      */
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
     /**
@@ -234,7 +237,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultSets = context.getStringAttribute("resultSets");
 
     /**
-     * 为我们的insert|delete|update|select节点构建成我们的mappedStatment对象
+     * 为我们的insert|delete|update|select节点构建成我们的mappedStatement对象
      */
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,

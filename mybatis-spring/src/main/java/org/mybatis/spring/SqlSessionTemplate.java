@@ -1,5 +1,5 @@
 /**
- * Copyright ${license.git.copyrightYears} the original author or authors.
+ * Copyright 2010-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,9 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
    * 执行器类型
    */
   private final ExecutorType executorType;
-
+  /**
+   * sqlSession的代理类
+   */
   private final SqlSession sqlSessionProxy;
 
   private final PersistenceExceptionTranslator exceptionTranslator;
@@ -96,10 +98,8 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
    */
   public SqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
     /**
-     * sqlSessionFactory工厂对象
-     * sqlSessionFactory.getConfiguration().getDefaultExecutorType()
-     * sql的默认执行器对象
-     * public enum ExecutorType { SIMPLE, REUSE, BATCH }
+     * sqlSessionFactory工厂对象 sqlSessionFactory.getConfiguration().getDefaultExecutorType() sql的默认执行器对象 public enum
+     * ExecutorType { SIMPLE, REUSE, BATCH }
      *
      */
     this(sqlSessionFactory, sqlSessionFactory.getConfiguration().getDefaultExecutorType());
@@ -115,8 +115,10 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
    *          an executor type on session
    */
   public SqlSessionTemplate(SqlSessionFactory sqlSessionFactory, ExecutorType executorType) {
-    this(sqlSessionFactory, executorType,
-        new MyBatisExceptionTranslator(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(), true));
+    this(
+      sqlSessionFactory,
+      executorType,
+      new MyBatisExceptionTranslator(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(), true));
   }
 
   /**
@@ -142,8 +144,13 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
     /**
      * sqlSession代理对象 来调用我们的目标方法
      */
-    this.sqlSessionProxy = (SqlSession) newProxyInstance(SqlSessionFactory.class.getClassLoader(),
-        new Class[] { SqlSession.class }, new SqlSessionInterceptor());
+    this.sqlSessionProxy = (SqlSession)
+      newProxyInstance(
+        SqlSessionFactory.class.getClassLoader(),
+        //代理的接口
+        new Class[] { SqlSession.class },
+        //代理拦截器
+        new SqlSessionInterceptor());
   }
 
   public SqlSessionFactory getSqlSessionFactory() {
@@ -171,7 +178,7 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
    */
   /**
    * 方法实现说明:sqlSessionTemplate调用查询单个
-   * 
+   *
    * @author:xsls
    * @param statement:com.tuling.mapper.DeptMapper.findDeptByIdAndName
    * @param parameter:参数
@@ -458,10 +465,13 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       /**
-       * 尝试从事务的线程变量中获取session,若没有获取到就直接新开一个session， 所以加事务可以缓存我们的sqlSession(也就是我们的SqlSessionTemplate对象)
+       * 尝试从事务的线程变量中获取session,若没有获取到就直接新开一个session，
+       * 所以加事务可以缓存我们的sqlSession(也就是我们的SqlSessionTemplate对象)
        */
-      SqlSession sqlSession = getSqlSession(SqlSessionTemplate.this.sqlSessionFactory,
-          SqlSessionTemplate.this.executorType, SqlSessionTemplate.this.exceptionTranslator);
+      SqlSession sqlSession = getSqlSession(
+        SqlSessionTemplate.this.sqlSessionFactory,
+          SqlSessionTemplate.this.executorType,
+        SqlSessionTemplate.this.exceptionTranslator);
       try {
         /**
          * 调用我们的目标方法代理的就是我们的session接口的方法 因为上一步返回的session是我们DefaultSqlSession对象, 所以在这里直接调用到我们的DefaultSqlSession的方法中

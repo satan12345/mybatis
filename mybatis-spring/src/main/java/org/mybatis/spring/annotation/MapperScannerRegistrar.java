@@ -1,5 +1,5 @@
 /**
- * Copyright ${license.git.copyrightYears} the original author or authors.
+ * Copyright 2010-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,13 +77,17 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
    * {@inheritDoc}
    */
   /**
-   * 方法实现说明:spring ioc在解析我们的住配置类的时候,会解析@MapperScann注解,然后 调用registerBeanDefinitions方法来进行注册我们的bean定义信息
-   * 
+   * 方法实现说明:
+   * spring ioc在解析我们的住配置类的时候,
+   * 会解析@MapperScann注解,然后
+   * 调用registerBeanDefinitions方法来进行注册我们的bean定义信息
+   *
    * @author:xsls
    * @param importingClassMetadata
    *          :主配置类的信息(包含了class信息)
    * @param registry
    *          bean定义注册器
+   *          向 spring容器中注册bdf
    * @return:
    * @exception:
    * @date:2019/8/20 22:13
@@ -104,7 +108,8 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
        * 调用重写的方法registerBeanDefinitions generateBaseBeanName(importingClassMetadata, 0) 我们即将注册的bean定义的名称
        * com.tuling.config.MyBatisConfig#MapperScannerRegistrar#0
        */
-      registerBeanDefinitions(mapperScanAttrs, registry, generateBaseBeanName(importingClassMetadata, 0));
+      registerBeanDefinitions(mapperScanAttrs, registry,
+        generateBaseBeanName(importingClassMetadata, 0));
     }
   }
 
@@ -113,7 +118,8 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
     /**
      * 创建bean定义构造器 通过够构造器来构建出我们的bean定义<MapperScannerConfigurer> 应用到的设计模式[建造者模式]
      */
-    BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MapperScannerConfigurer.class);
+    BeanDefinitionBuilder builder =
+      BeanDefinitionBuilder.genericBeanDefinition(MapperScannerConfigurer.class);
 
     /**
      * 手动为我们MapperScannerConfigurer 开启processPropertyPlaceHolders属性为true 我们需要着重研究下MapperScannerConfigurer类的继承结构
@@ -192,7 +198,7 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
     builder.addPropertyValue("basePackage", StringUtils.collectionToCommaDelimitedString(basePackages));
 
     /**
-     * 为我们的容器中注册了MapperScannerConfigurer的接口
+     * 为我们的容器中注册了MapperScannerConfigurer beanpostProcess 的bean定义
      */
     registry.registerBeanDefinition(beanName, builder.getBeanDefinition());
 
@@ -200,7 +206,7 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 
   /**
    * 方法实现说明:生成我们bean定义的名称
-   * 
+   *
    * @author:xsls
    * @param importingClassMetadata
    *          传入的配置类

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserMapper userMapper;
+    UserMapper userMapper;//将userMapper代理对象-->作为一个bean放入到Sprnig容器中
 
     @Override
     public User getUser(Integer id) {

@@ -1,5 +1,5 @@
 /**
- * Copyright ${license.git.copyrightYears} the original author or authors.
+ * Copyright 2010-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,9 @@ public abstract class SqlSessionDaoSupport extends DaoSupport {
     /**
      * 最终为我们的sqlSessionTemplate进行赋值
      */
-    if (this.sqlSessionTemplate == null || sqlSessionFactory != this.sqlSessionTemplate.getSqlSessionFactory()) {
+    if (this.sqlSessionTemplate == null ||
+      sqlSessionFactory != this.sqlSessionTemplate.getSqlSessionFactory()) {
+
       this.sqlSessionTemplate = createSqlSessionTemplate(sqlSessionFactory);
     }
   }
@@ -122,7 +124,7 @@ public abstract class SqlSessionDaoSupport extends DaoSupport {
 
   /**
    * 方法实现说明:用于检查我们类的属性sqlSessionFactory,sqlSessionTemplate是否为空
-   * 
+   *
    * @author:xsls
    * @return:
    * @exception:

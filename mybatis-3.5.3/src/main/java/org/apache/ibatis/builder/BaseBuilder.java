@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ public abstract class BaseBuilder {
   protected final TypeAliasRegistry typeAliasRegistry;
   /**
    * 用户保存我们java类型和jdbc数据库类型的
+   * 类型处理器
    */
   protected final TypeHandlerRegistry typeHandlerRegistry;
 

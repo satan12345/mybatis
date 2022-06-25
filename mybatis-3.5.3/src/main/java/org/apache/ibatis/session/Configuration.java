@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -120,7 +120,9 @@ public class Configuration {
   protected boolean returnInstanceForEmptyRow;
 
   protected String logPrefix;
+  //日志处理类
   protected Class<? extends Log> logImpl;
+
   protected Class<? extends VFS> vfsImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
@@ -128,6 +130,7 @@ public class Configuration {
   protected Integer defaultStatementTimeout;
   protected Integer defaultFetchSize;
   protected ResultSetType defaultResultSetType;
+  //默认的执行器
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
@@ -135,6 +138,7 @@ public class Configuration {
    * 存放properties标签
    */
   protected Properties variables = new Properties();
+
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
@@ -158,6 +162,7 @@ public class Configuration {
    * 拦截器链
    */
   protected final InterceptorChain interceptorChain = new InterceptorChain();
+
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   /**
    * 别名注册器
@@ -167,7 +172,8 @@ public class Configuration {
   /**
    * mappedStatements缓存
    */
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
+  protected final Map<String, MappedStatement> mappedStatements =
+    new StrictMap<MappedStatement>("Mapped Statements collection")
       .conflictMessageProducer((savedValue, targetValue) ->
           ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
   /**
@@ -779,6 +785,10 @@ public class Configuration {
   }
 
   public void addMappedStatement(MappedStatement ms) {
+    /**
+     * mappedStatements 虽然是接口map 但是实现却是 StrictMap
+     * 而StrictMap 继承HashMap 被重写了put方法 在放入之前会判断key是否已经存在 存在的抛出异常
+     */
     mappedStatements.put(ms.getId(), ms);
   }
 

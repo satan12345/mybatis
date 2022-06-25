@@ -1,5 +1,5 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -132,10 +132,12 @@ public class MapperAnnotationBuilder {
     String resource = type.toString();
     // 是否已经解析mapper接口对应的mapper  interface com.tuling.mapper.ZhonghengMapper
     if (!configuration.isResourceLoaded(resource)) {
-      // 根据mapper接口名获取 xml文件并解析，  解析<mapper></mapper>里面所有东西放到configuration
+      // 根据mapper接口名获取 xml文件并解析，
+      // 解析<mapper></mapper>里面所有东西放到configuration
       loadXmlResource();
       // 添加已解析的标记
       configuration.addLoadedResource(resource);
+
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
@@ -189,6 +191,7 @@ public class MapperAnnotationBuilder {
         }
       }
       if (inputStream != null) {
+        //解析 mapper.xml
         XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream,
           assistant.getConfiguration(), xmlResource,
           configuration.getSqlFragments(), type.getName());

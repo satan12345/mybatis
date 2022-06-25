@@ -1,17 +1,17 @@
 /**
- * Copyright ${license.git.copyrightYears} the original author or authors.
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *    Copyright 2009-2021 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.builder.xml;
 
@@ -54,6 +54,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private boolean parsed;
   private final XPathParser parser;
+  //默认的环境参数
   private String environment;
   private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
 
@@ -103,6 +104,7 @@ public class XMLConfigBuilder extends BaseBuilder {
      * TypeHandlerRegistry赋值
      */
     super(new Configuration());
+
     ErrorContext.instance().resource("SQL Mapper Configuration");
     /**
      * 把props绑定到configuration的props属性上
@@ -375,7 +377,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         Properties properties = child.getChildrenAsProperties();
         //将插件解析成Interceptor
         Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).getDeclaredConstructor().newInstance();
-
+        //设置插件的相关属性
         interceptorInstance.setProperties(properties);
         //添加到拦截器链中
         configuration.addInterceptor(interceptorInstance);
@@ -517,8 +519,10 @@ public class XMLConfigBuilder extends BaseBuilder {
             .transactionFactory(txFactory)
             //数据源
             .dataSource(dataSource);
+          //建造者模式
+          Environment environment = environmentBuilder.build();
 
-          configuration.setEnvironment(environmentBuilder.build());
+          configuration.setEnvironment(environment);
         }
       }
     }

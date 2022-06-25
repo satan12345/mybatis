@@ -1,5 +1,5 @@
 /**
- * Copyright ${license.git.copyrightYears} the original author or authors.
+ * Copyright 2010-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,9 +98,11 @@ import org.springframework.util.StringUtils;
  * @author: xsls
  * @createDate: 2019/8/21 13:50
  * @version: 1.0
+ *   //实现了Bean定义注册的后置处理器
  */
 public class MapperScannerConfigurer
-    implements BeanDefinitionRegistryPostProcessor, InitializingBean, ApplicationContextAware, BeanNameAware {
+    implements BeanDefinitionRegistryPostProcessor,
+  InitializingBean, ApplicationContextAware, BeanNameAware {
 
   private String basePackage;
 
@@ -179,7 +181,7 @@ public class MapperScannerConfigurer
    * @param annotationClass
    *          annotation class
    */
-  public void setAnnotationClass(Class<? extends Annotation> annotationClass) {
+  public void setAnnotationClass(Class<? extends Annotation> annotationClass){
     this.annotationClass = annotationClass;
   }
 
@@ -346,8 +348,10 @@ public class MapperScannerConfigurer
   /**
    * 方法实现说明: 我为我们IOC容器添加@MapperScan 注解扫描的所有的 mapper包下的bean定义
    *
-   * @MapperScan=====>为我们容器中添加MapperScannerConfigurer bean定义 然后我们发现MapperScannerConfigurer
-   * 实现了BeanDefinitionRegistryPostProcessor 所以在ioc容器refresh方法的时候会调用postProcessBeanDefinitionRegistry 来为我们容器
+   * @MapperScan=====>为我们容器中添加MapperScannerConfigurer bean定义
+   * 然后我们发现MapperScannerConfigurer
+   * 实现了BeanDefinitionRegistryPostProcessor
+   * 所以在ioc容器refresh方法的时候会调用postProcessBeanDefinitionRegistry 来为我们容器
    * 中注册 @MapperScan 扫描的mapper包下的bean定义到容器中
    *
    * @author:xsls
@@ -356,18 +360,19 @@ public class MapperScannerConfigurer
    * @return:
    * @exception:
    * @date:2019/8/21 13:55
+   *
    */
   @Override
-  public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
+  public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry){
     /**
      * 若MapperScannerConfigurer属性的processPropertyPlaceHolders 为ture的时候,就进行 processPropertyPlaceHolders();
      */
     if (this.processPropertyPlaceHolders) {
       processPropertyPlaceHolders();
     }
-
     /**
-     * 显示的new 一个ClassPathMapperScanner 包扫描器对象 这个对象是mybaits继承了spring的 ClassPathBeanDefinitionScanner
+     * 显示的new 一个ClassPathMapperScanner 包扫描器对象
+     * 这个对象是mybaits继承了spring的 ClassPathBeanDefinitionScanner
      * 为我们扫描器指定@MapperScan属性
      */
     ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
@@ -405,7 +410,7 @@ public class MapperScannerConfigurer
    * @exception:
    * @date:2019/8/21 14:00
    */
-  private void processPropertyPlaceHolders() {
+  private void processPropertyPlaceHolders(){
     /**
      * 获取我们容器中的所有PropertyResourceConfigurer的组件 <bean id='propertyPlaceholderConfigurer' class=
      * "org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> <properties name='locations'> <list>
@@ -472,13 +477,12 @@ public class MapperScannerConfigurer
     return this.applicationContext.getEnvironment();
   }
 
-  private String updatePropertyValue(String propertyName, PropertyValues values) {
+  private String updatePropertyValue(String propertyName, PropertyValues values){
     PropertyValue property = values.getPropertyValue(propertyName);
 
     if (property == null) {
       return null;
     }
-
     Object value = property.getValue();
 
     if (value == null) {
